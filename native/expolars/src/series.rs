@@ -14,7 +14,7 @@ pub(crate) fn to_ex_series_collection(s: Vec<Series>) -> Vec<ExSeries> {
 
 #[rustler::nif]
 /// Format `DataFrame` as String
-pub fn series_as_str(data: ExSeries) -> Result<String, ExPolarsError> {
+pub fn s_as_str(data: ExSeries) -> Result<String, ExPolarsError> {
     Ok(format!("{:?}", data.inner.0))
 
 }

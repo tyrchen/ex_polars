@@ -1,17 +1,14 @@
-// use rustler::resource::ResourceArc;
-// use rustler::{Env, Term};
-// use polars::prelude::*;
-// use polars::frame::ser::csv::CsvEncoding;
-
-// use std::result::Result;
+use rustler::{Env, Term};
 
 mod error;
 mod datatypes;
 mod dataframe;
-pub(crate) mod series;
+mod series;
 
 pub use error::ExPolarsError;
 pub use datatypes::{DataType, ExSeries, ExSeriesRef, ExDataFrame, ExDataFrameRef};
+use dataframe::*;
+use series::*;
 
 #[macro_export]
 macro_rules! df_read {
@@ -52,3 +49,82 @@ macro_rules! df_write_read {
         }
     };
 }
+
+
+// rustler initialization
+
+fn on_load(env: Env, _info: Term) -> bool {
+    rustler::resource!(ExDataFrameRef, env);
+    rustler::resource!(ExSeriesRef, env);
+    true
+}
+
+rustler::init!("Elixir.ExPolars.Native", [
+    df_read_csv,
+    df_read_parquet,
+    df_to_csv,
+    df_as_str,
+    df_add,
+    df_sub,
+    df_mul,
+    df_div,
+    df_rem,
+    df_sample_n,
+    df_sample_frac,
+    df_rechunk,
+    df_fill_none,
+    df_join,
+    df_get_columns,
+    df_columns,
+    df_set_column_names,
+    df_dtypes,
+    df_n_chunks,
+    df_shape,
+    df_width,
+    df_height,
+    df_hstack_mut,
+    df_hstack,
+    df_vstack,
+    df_drop_in_place,
+    df_drop_nulls,
+    df_drop,
+    df_select_at_idx,
+    df_find_idx_by_name,
+    df_column,
+    df_select,
+    df_filter,
+    df_take,
+    df_take_with_series,
+    df_sort_new,
+    df_sort_in_place,
+    df_replace,
+    df_replace_at_idx,
+    df_insert_at_idx,
+    df_slice,
+    df_head,
+    df_tail,
+    df_is_unique,
+    df_is_duplicated,
+    df_frame_equal,
+    df_groupby,
+    df_groupby_agg,
+    df_groupby_quantile,
+    df_pivot,
+    df_clone,
+    df_explode,
+    df_melt,
+    df_shift,
+    df_drop_duplicates,
+    df_max,
+    df_min,
+    df_sum,
+    df_mean,
+    df_stdev,
+    df_var,
+    df_median,
+    df_quantile,
+    df_to_dummies,
+
+    // series
+    s_as_str
+], load = on_load);
