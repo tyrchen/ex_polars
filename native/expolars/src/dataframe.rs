@@ -125,7 +125,7 @@ pub fn rem(data: ExDataFrame, s: ExSeries) -> Result<ExDataFrame, ExPolarsError>
 #[rustler::nif]
 pub fn sample_n(data: ExDataFrame, n: usize, with_replacement: bool) -> Result<ExDataFrame, ExPolarsError> {
     df_read!(data, df, {
-        let new_df = (&*df).sample_n(n, with_replacement)?;
+        let new_df = df.sample_n(n, with_replacement)?;
         Ok(ExDataFrame::new(new_df))
     })
 
@@ -134,7 +134,7 @@ pub fn sample_n(data: ExDataFrame, n: usize, with_replacement: bool) -> Result<E
 #[rustler::nif]
 pub fn sample_frac(data: ExDataFrame, frac: f64, with_replacement: bool) -> Result<ExDataFrame, ExPolarsError> {
     df_read!(data, df, {
-        let new_df = (&*df).sample_frac(frac, with_replacement)?;
+        let new_df = df.sample_frac(frac, with_replacement)?;
         Ok(ExDataFrame::new(new_df))
     })
 }
@@ -159,7 +159,7 @@ pub fn fill_none(data: ExDataFrame, strategy: &str) -> Result<ExDataFrame, ExPol
         s => return Err(ExPolarsError::Other(format!("Strategy {} not supported", s)).into()),
     };
     df_read!(data, df, {
-        let new_df = (&*df).fill_none(strat)?;
+        let new_df = df.fill_none(strat)?;
         Ok(ExDataFrame::new(new_df))
     })
 }
@@ -188,7 +188,7 @@ pub fn join(
 #[rustler::nif]
 pub fn get_columns(data: ExDataFrame) -> Result<Vec<ExSeries>, ExPolarsError> {
     df_read!(data, df, {
-        Ok(to_ex_series_collection((&*df).get_columns().clone()))
+        Ok(to_ex_series_collection(df.get_columns().clone()))
     })
 }
 
@@ -196,7 +196,7 @@ pub fn get_columns(data: ExDataFrame) -> Result<Vec<ExSeries>, ExPolarsError> {
 #[rustler::nif]
 pub fn columns(data: ExDataFrame) -> Result<Vec<String>, ExPolarsError> {
     df_read!(data, df, {
-        let cols = (&*df).get_column_names();
+        let cols = df.get_column_names();
         Ok(cols.into_iter().map(|s| s.to_owned()).collect())
     })
 }
@@ -214,7 +214,7 @@ pub fn set_column_names(data: ExDataFrame, names: Vec<&str>) -> Result<(), ExPol
 #[rustler::nif]
 pub fn dtypes(data: ExDataFrame) -> Result<Vec<u8>, ExPolarsError> {
     df_read!(data, df, {
-        let result = (&*df)
+        let result = df
         .dtypes()
         .iter()
         .map(|arrow_dtype| {
@@ -229,28 +229,28 @@ pub fn dtypes(data: ExDataFrame) -> Result<Vec<u8>, ExPolarsError> {
 #[rustler::nif]
 pub fn n_chunks(data: ExDataFrame) -> Result<usize, ExPolarsError> {
     df_read!(data, df, {
-        Ok((&*df).n_chunks()?)
+        Ok(df.n_chunks()?)
     })
 }
 
 #[rustler::nif]
 pub fn shape(data: ExDataFrame) -> Result<(usize, usize), ExPolarsError> {
     df_read!(data, df, {
-        Ok((&*df).shape())
+        Ok(df.shape())
     })
 }
 
 #[rustler::nif]
 pub fn height(data: ExDataFrame) -> Result<usize, ExPolarsError> {
     df_read!(data, df, {
-        Ok((&*df).height())
+        Ok(df.height())
     })
 }
 
 #[rustler::nif]
 pub fn width(data: ExDataFrame) -> Result<usize, ExPolarsError> {
     df_read!(data, df, {
-        Ok((&*df).width())
+        Ok(df.width())
     })
 
 }
@@ -268,7 +268,7 @@ pub fn hstack_mut(data: ExDataFrame, cols: Vec<ExSeries>) -> Result<(), ExPolars
 pub fn hstack(data: ExDataFrame, cols: Vec<ExSeries>) -> Result<ExDataFrame, ExPolarsError> {
     let cols = to_series_collection(cols);
     df_read!(data, df, {
-        let new_df = (&*df).hstack(&cols)?;
+        let new_df = df.hstack(&cols)?;
         Ok(ExDataFrame::new(new_df))
     })
 }
@@ -292,7 +292,7 @@ pub fn drop_in_place(data: ExDataFrame, name: &str) -> Result<ExSeries, ExPolars
 #[rustler::nif]
 pub fn drop_nulls(data: ExDataFrame, subset: Option<Vec<String>>) -> Result<ExDataFrame, ExPolarsError> {
     df_read!(data, df, {
-        let new_df = (&*df).drop_nulls(subset.as_ref().map(|s| s.as_ref()))?;
+        let new_df = df.drop_nulls(subset.as_ref().map(|s| s.as_ref()))?;
         Ok(ExDataFrame::new(new_df))
     })
 }
@@ -308,7 +308,7 @@ pub fn drop(data: ExDataFrame, name: &str) -> Result<ExDataFrame, ExPolarsError>
 #[rustler::nif]
 pub fn select_at_idx(data: ExDataFrame, idx: usize) -> Result<Option<ExSeries>, ExPolarsError> {
     df_read!(data, df, {
-        let result = (&*df).select_at_idx(idx).map(|s| ExSeries::new(s.clone()));
+        let result = df.select_at_idx(idx).map(|s| ExSeries::new(s.clone()));
         Ok(result)
     })
 
@@ -317,7 +317,7 @@ pub fn select_at_idx(data: ExDataFrame, idx: usize) -> Result<Option<ExSeries>, 
 #[rustler::nif]
 pub fn find_idx_by_name(data: ExDataFrame, name: &str) -> Result<Option<usize>, ExPolarsError> {
     df_read!(data, df, {
-        Ok((&*df).find_idx_by_name(name))
+        Ok(df.find_idx_by_name(name))
     })
 
 }
@@ -326,7 +326,7 @@ pub fn find_idx_by_name(data: ExDataFrame, name: &str) -> Result<Option<usize>, 
 pub fn column(data: ExDataFrame, name: &str) -> Result<ExSeries, ExPolarsError> {
     df_read!(data, df, {
         let series =
-        (&*df)
+        df
         .column(name)
         .map(|s| ExSeries::new(s.clone()))?;
         Ok(series)
@@ -336,7 +336,7 @@ pub fn column(data: ExDataFrame, name: &str) -> Result<ExSeries, ExPolarsError> 
 #[rustler::nif]
 pub fn select(data: ExDataFrame, selection: Vec<&str>) -> Result<ExDataFrame, ExPolarsError> {
     df_read!(data, df, {
-        let new_df = (&*df).select(&selection)?;
+        let new_df = df.select(&selection)?;
         Ok(ExDataFrame::new(new_df))
     })
 }
@@ -346,7 +346,7 @@ pub fn filter(data: ExDataFrame, mask: ExSeries) -> Result<ExDataFrame, ExPolars
     df_read!(data, df, {
         let filter_series = &mask.inner.0;
         if let Ok(ca) = filter_series.bool() {
-            let new_df = (&*df).filter(ca)?;
+            let new_df = df.filter(ca)?;
             Ok(ExDataFrame::new(new_df))
         } else {
             Err(ExPolarsError::Other("Expected a boolean mask".into()))
@@ -357,7 +357,7 @@ pub fn filter(data: ExDataFrame, mask: ExSeries) -> Result<ExDataFrame, ExPolars
 #[rustler::nif]
 pub fn take(data: ExDataFrame,  indices: Vec<usize>) -> Result<ExDataFrame, ExPolarsError> {
     df_read!(data, df, {
-        let new_df = (&*df).take(&indices);
+        let new_df = df.take(&indices);
         Ok(ExDataFrame::new(new_df))
     })
 }
@@ -366,15 +366,15 @@ pub fn take(data: ExDataFrame,  indices: Vec<usize>) -> Result<ExDataFrame, ExPo
 pub fn take_with_series(data: ExDataFrame, indices: ExSeries) -> Result<ExDataFrame, ExPolarsError> {
     let idx = indices.inner.0.u32()?;
     df_read!(data, df, {
-        let new_df = (&*df).take(&idx);
+        let new_df = df.take(&idx);
         Ok(ExDataFrame::new(new_df))
     })
 }
 
 #[rustler::nif]
-pub fn sort(data: ExDataFrame, by_column: &str, reverse: bool) -> Result<ExDataFrame, ExPolarsError> {
+pub fn sort_new(data: ExDataFrame, by_column: &str, reverse: bool) -> Result<ExDataFrame, ExPolarsError> {
     df_read!(data, df, {
-        let new_df = (&*df).sort(by_column, reverse)?;
+        let new_df = df.sort(by_column, reverse)?;
         Ok(ExDataFrame::new(new_df))
     })
 }
@@ -414,7 +414,7 @@ pub fn insert_at_idx(data: ExDataFrame, index: usize, new_col: ExSeries) -> Resu
 #[rustler::nif]
 pub fn slice(data: ExDataFrame, offset: usize, length: usize) -> Result<ExDataFrame, ExPolarsError> {
     df_read!(data, df, {
-        let new_df = (&*df).slice(offset, length)?;
+        let new_df = df.slice(offset, length)?;
         Ok(ExDataFrame::new(new_df))
     })
 }
@@ -422,7 +422,7 @@ pub fn slice(data: ExDataFrame, offset: usize, length: usize) -> Result<ExDataFr
 #[rustler::nif]
 pub fn head(data: ExDataFrame, length: Option<usize>) -> Result<ExDataFrame, ExPolarsError> {
     df_read!(data, df, {
-        let new_df = (&*df).head(length);
+        let new_df = df.head(length);
         Ok(ExDataFrame::new(new_df))
     })
 }
@@ -430,7 +430,7 @@ pub fn head(data: ExDataFrame, length: Option<usize>) -> Result<ExDataFrame, ExP
 #[rustler::nif]
 pub fn tail(data: ExDataFrame, length: Option<usize>) -> Result<ExDataFrame, ExPolarsError> {
     df_read!(data, df, {
-        let new_df = (&*df).tail(length);
+        let new_df = df.tail(length);
         Ok(ExDataFrame::new(new_df))
     })
 }
@@ -438,11 +438,229 @@ pub fn tail(data: ExDataFrame, length: Option<usize>) -> Result<ExDataFrame, ExP
 #[rustler::nif]
 pub fn is_unique(data: ExDataFrame) -> Result<ExSeries, ExPolarsError> {
     df_read!(data, df, {
-        let mask = (&*df).is_unique()?;
+        let mask = df.is_unique()?;
         Ok(ExSeries::new(mask.into_series()))
     })
 }
 
+
+#[rustler::nif]
+pub fn is_duplicated(data: ExDataFrame) -> Result<ExSeries, ExPolarsError> {
+    df_read!(data, df, {
+        let mask = df.is_unique()?;
+        Ok(ExSeries::new(mask.into_series()))
+    })
+}
+
+#[rustler::nif]
+pub fn frame_equal(data: ExDataFrame, other: ExDataFrame, null_equal: bool) -> Result<bool, ExPolarsError> {
+    df_read_read!(data, other, df, df1, {
+        let result = if null_equal {
+            df.frame_equal_missing(&*df1)
+        } else {
+            df.frame_equal(&*df1)
+        };
+        Ok(result)
+    })
+
+}
+
+#[rustler::nif]
+pub fn groupby(data: ExDataFrame, by: Vec<&str>, sel: Option<Vec<String>>, agg: &str) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        let gb = df.groupby(&by)?;
+        let selection = match sel.as_ref() {
+            Some(s) => gb.select(s),
+            None => gb,
+        };
+        let result = match agg {
+            "min" => selection.min(),
+            "max" => selection.max(),
+            "mean" => selection.mean(),
+            "first" => selection.first(),
+            "last" => selection.last(),
+            "sum" => selection.sum(),
+            "count" => selection.count(),
+            "n_unique" => selection.n_unique(),
+            "median" => selection.median(),
+            "agg_list" => selection.agg_list(),
+            "groups" => selection.groups(),
+            "std" => selection.std(),
+            "var" => selection.var(),
+            a => Err(PolarsError::Other(
+                format!("agg fn {} does not exists", a).into(),
+            )),
+        };
+        Ok(ExDataFrame::new(result?))
+    })
+}
+
+#[rustler::nif]
+pub fn groupby_agg(
+    data: ExDataFrame,
+    by: Vec<&str>,
+    column_to_agg: Vec<(&str, Vec<&str>)>,
+) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        let gb = df.groupby(&by)?;
+        let new_df = gb.agg(&column_to_agg)?;
+        Ok(ExDataFrame::new(new_df))
+    })
+}
+
+// TODO: groupby_apply(data: ExDataFrame, by: Vec<&str>, lambda: Fun) -> Result<ExDataFrame, ExPolarsError> not implemented
+// I don't know how to pass an elixir function to rust for execution
+
+
+#[rustler::nif]
+pub fn groupby_quantile(
+    data: ExDataFrame,
+    by: Vec<&str>,
+    sel: Vec<String>,
+    quant: f64,
+) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        let gb = df.groupby(&by)?;
+        let selection = gb.select(&sel);
+        let new_df = selection.quantile(quant)?;
+        Ok(ExDataFrame::new(new_df))
+    })
+}
+
+#[rustler::nif]
+pub fn pivot(
+    data: ExDataFrame,
+    by: Vec<String>,
+    pivot_column: &str,
+    values_column: &str,
+    agg: &str,
+) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        let mut gb = df.groupby(&by)?;
+        let pivot = gb.pivot(pivot_column, values_column);
+        let result = match agg {
+            "first" => pivot.first(),
+            "min" => pivot.min(),
+            "max" => pivot.max(),
+            "mean" => pivot.mean(),
+            "median" => pivot.median(),
+            "sum" => pivot.sum(),
+            "count" => pivot.count(),
+            a => Err(PolarsError::Other(
+                format!("agg fn {} does not exists", a).into(),
+            )),
+        };
+        Ok(ExDataFrame::new(result?))
+    })
+}
+
+#[rustler::nif]
+pub fn clone(data: ExDataFrame) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        Ok(ExDataFrame::new(df.clone()))
+    })
+}
+
+#[rustler::nif]
+pub fn explode(data: ExDataFrame, cols: Vec<String>) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        let new_df = df.explode(&cols)?;
+        Ok(ExDataFrame::new(new_df))
+    })
+}
+
+#[rustler::nif]
+pub fn melt(data: ExDataFrame, id_vars: Vec<&str>, value_vars: Vec<&str>) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        let new_df = df.melt(id_vars, value_vars)?;
+        Ok(ExDataFrame::new(new_df))
+    })
+}
+
+#[rustler::nif]
+pub fn shift(data: ExDataFrame, periods: i32) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        let new_df = df.shift(periods)?;
+        Ok(ExDataFrame::new(new_df))
+    })
+}
+
+#[rustler::nif]
+pub fn drop_duplicates(
+    data: ExDataFrame,
+    maintain_order: bool,
+    subset: Option<Vec<String>>,
+) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        let new_df = df.drop_duplicates(maintain_order, subset.as_ref().map(|v| v.as_ref()))?;
+        Ok(ExDataFrame::new(new_df))
+    })
+}
+
+#[rustler::nif]
+pub fn max(data: ExDataFrame) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        Ok(ExDataFrame::new(df.max()))
+    })
+}
+
+#[rustler::nif]
+pub fn min(data: ExDataFrame) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        Ok(ExDataFrame::new(df.min()))
+    })
+}
+
+#[rustler::nif]
+pub fn sum(data: ExDataFrame) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        Ok(ExDataFrame::new(df.sum()))
+    })
+}
+
+#[rustler::nif]
+pub fn mean(data: ExDataFrame) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        Ok(ExDataFrame::new(df.mean()))
+    })
+}
+
+#[rustler::nif]
+pub fn stdev(data: ExDataFrame) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        Ok(ExDataFrame::new(df.std()))
+    })
+}
+
+#[rustler::nif]
+pub fn var(data: ExDataFrame) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        Ok(ExDataFrame::new(df.var()))
+    })
+}
+
+#[rustler::nif]
+pub fn median(data: ExDataFrame) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        Ok(ExDataFrame::new(df.median()))
+    })
+}
+
+#[rustler::nif]
+pub fn quantile(data: ExDataFrame, quant: f64) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        let new_df = df.quantile(quant)?;
+        Ok(ExDataFrame::new(new_df))
+    })
+}
+
+#[rustler::nif]
+pub fn to_dummies(data: ExDataFrame) -> Result<ExDataFrame, ExPolarsError> {
+    df_read!(data, df, {
+        let new_df = df.to_dummies()?;
+        Ok(ExDataFrame::new(new_df))
+    })
+}
 
 // rustler initialization
 
@@ -488,7 +706,7 @@ rustler::init!("Elixir.ExPolars.DataFrame", [
     filter,
     take,
     take_with_series,
-    sort,
+    sort_new,
     sort_in_place,
     replace,
     replace_at_idx,
@@ -496,5 +714,25 @@ rustler::init!("Elixir.ExPolars.DataFrame", [
     slice,
     head,
     tail,
-    is_unique
+    is_unique,
+    is_duplicated,
+    frame_equal,
+    groupby,
+    groupby_agg,
+    groupby_quantile,
+    pivot,
+    clone,
+    explode,
+    melt,
+    shift,
+    drop_duplicates,
+    max,
+    min,
+    sum,
+    mean,
+    stdev,
+    var,
+    median,
+    quantile,
+    to_dummies,
 ], load = on_load);
