@@ -7,7 +7,6 @@ use rustler::resource::ResourceArc;
 
 use std::result::Result;
 
-
 pub struct ExDataFrameRef(pub RwLock<DataFrame>);
 pub struct ExSeriesRef(pub Series);
 
