@@ -8,6 +8,7 @@
 mod error;
 mod datatypes;
 mod dataframe;
+pub(crate) mod series;
 
 pub use error::ExPolarsError;
-pub use datatypes::DataType;
+pub use datatypes::{DataType, ExSeries, ExSeriesRef, ExDataFrame, ExDataFrameRef};

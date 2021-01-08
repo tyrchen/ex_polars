@@ -1,6 +1,27 @@
 // This file is modified based on: https://github.com/ritchie46/polars/blob/master/py-polars/src/datatypes.rs
 
+use std::sync::RwLock;
 use polars::prelude::*;
+use rustler::NifStruct;
+use rustler::resource::ResourceArc;
+
+use std::result::Result;
+
+
+pub struct ExDataFrameRef(pub RwLock<DataFrame>);
+pub struct ExSeriesRef(pub Series);
+
+#[derive(NifStruct)]
+#[module = "ExPolars.DataFrame"]
+pub struct ExDataFrame {
+    pub inner: ResourceArc<ExDataFrameRef>,
+}
+
+#[derive(NifStruct)]
+#[module = "ExPolars.Series"]
+pub struct ExSeries {
+    pub inner: ResourceArc<ExSeriesRef>,
+}
 
 // Don't change the order of these!
 #[repr(u8)]
@@ -24,6 +45,35 @@ pub enum DataType {
     DurationNanosecond,
     DurationMillisecond,
     Object,
+}
+
+impl ExDataFrameRef {
+    pub fn new(df: DataFrame) -> Self {
+        Self(RwLock::new(df))
+    }
+}
+
+impl ExSeriesRef {
+    pub fn new(s: Series) -> Self {
+        Self(s)
+    }
+}
+
+impl ExDataFrame {
+    pub fn new(df: DataFrame) -> Self {
+        Self {
+            inner: ResourceArc::new(ExDataFrameRef::new(df))
+        }
+    }
+}
+
+
+impl ExSeries {
+    pub fn new(s: Series) -> Self {
+        Self {
+            inner: ResourceArc::new(ExSeriesRef::new(s))
+        }
+    }
 }
 
 impl From<&ArrowDataType> for DataType {

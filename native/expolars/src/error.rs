@@ -15,6 +15,8 @@ pub enum ExPolarsError {
     Polars(#[from] polars::prelude::PolarsError),
     #[error("Internal Error")]
     Internal,
+    #[error("Other error: {0}")]
+    Other(String),
 }
 
 impl<'a> Encoder for ExPolarsError {
@@ -23,7 +25,7 @@ impl<'a> Encoder for ExPolarsError {
             ExPolarsError::Internal => (error(), self.to_string()).encode(env),
             ExPolarsError::Io(_) => (error(), self.to_string()).encode(env),
             ExPolarsError::Polars(_) => (error(), self.to_string()).encode(env),
-
+            ExPolarsError::Other(_) => (error(), self.to_string()).encode(env),
         }
     }
 }
