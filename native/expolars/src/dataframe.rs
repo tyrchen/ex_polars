@@ -6,7 +6,7 @@ use std::result::Result;
 use std::fs::File;
 use polars::frame::ser::csv::CsvEncoding;
 
-use crate::series::{to_series_collection, to_ex_series_collection};
+use crate::series::{to_series_collection, to_ex_series_collection, series_as_str};
 
 use crate::{DataType, ExDataFrame, ExDataFrameRef, ExSeries, ExSeriesRef, ExPolarsError};
 
@@ -735,4 +735,7 @@ rustler::init!("Elixir.ExPolars.DataFrame", [
     median,
     quantile,
     to_dummies,
+
+    // series
+    series_as_str
 ], load = on_load);

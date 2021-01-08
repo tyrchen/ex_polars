@@ -67,8 +67,8 @@ defmodule ExPolars.DataFrame do
   def replace_at_idx(_df, _index, _new_col), do: err()
   def insert_at_idx(_df, _index, _new_col), do: err()
   def slice(_df, _offset, _length), do: err()
-  def head(_df, _length), do: err()
-  def tail(_df, _length), do: err()
+  def head(_df, _length \\ 5), do: err()
+  def tail(_df, _length \\ 5), do: err()
   def is_unique(_df), do: err()
   def is_duplicated(_df), do: err()
   def frame_equal(_df, _other, _null_equal \\ false), do: err()
@@ -90,6 +90,7 @@ defmodule ExPolars.DataFrame do
   def median(_df), do: err()
   def quantile(_df, _quant), do: err()
   def to_dummies(_df), do: err()
+  def series_as_str(_s), do: err()
 
   def sample(df, n_or_frac, with_replacement \\ false) do
     case is_integer(n_or_frac) do
