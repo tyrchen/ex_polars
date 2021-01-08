@@ -2,6 +2,15 @@
 
 Elixir support for [polars](https://github.com/ritchie46/polars), a DataFrame library written in rust.
 
+## Usage
+
+```elixir
+alias ExPolars.DataFrame, as: Df
+df = Df.read_csv("iris.csv")
+Df.head(df)
+
+```
+
 ## Installation
 
 To build ex_polars, you need to install rust nightly. This is because polars is using nightly features at the moment.

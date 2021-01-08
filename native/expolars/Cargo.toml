@@ -7,11 +7,13 @@ edition = "2018"
 [lib]
 name = "expolars"
 path = "src/lib.rs"
-crate-type = ["dylib"]
+crate-type = ["cdylib"]
 
 [dependencies]
-polars = {git = "https://github.com/ritchie46/polars", features = ["parquet", "simd", "lazy", "strings", "temporal", "random", "object", "ipc"]}
 rustler = "0.22.0-rc.0"
-thiserror = "1"
+polars = {git = "https://github.com/ritchie46/polars", features = ["parquet", "simd", "lazy", "strings", "temporal", "random", "object", "ipc"]}
+
+anyhow = "1.0"
 ndarray = "0.14"
 parquet = "2"
+thiserror = "1"
