@@ -15,7 +15,9 @@ macro_rules! df_read {
     ($data: ident, $df: ident, $body: block) => {
         match $data.inner.0.read() {
             Ok($df) => $body,
-            Err(_) => Err(ExPolarsError::Internal),
+            Err(_) => Err(ExPolarsError::Internal(
+                "Failed to take read lock for df".into(),
+            )),
         }
     };
 }
@@ -25,7 +27,9 @@ macro_rules! df_read_read {
     ($data: ident, $other: ident, $df: ident, $df1: ident, $body: block) => {
         match ($data.inner.0.read(), $other.inner.0.read()) {
             (Ok($df), Ok($df1)) => $body,
-            _ => Err(ExPolarsError::Internal),
+            _ => Err(ExPolarsError::Internal(
+                "Failed to take read locks for df and df1".into(),
+            )),
         }
     };
 }
@@ -35,7 +39,9 @@ macro_rules! df_write {
     ($data: ident, $df: ident, $body: block) => {
         match $data.inner.0.write() {
             Ok(mut $df) => $body,
-            Err(_) => Err(ExPolarsError::Internal),
+            Err(_) => Err(ExPolarsError::Internal(
+                "Failed to take write lock for df".into(),
+            )),
         }
     };
 }
@@ -45,7 +51,9 @@ macro_rules! df_write_read {
     ($data: ident, $other: ident, $df: ident, $df1: ident, $body: block) => {
         match ($data.inner.0.write(), $other.inner.0.read()) {
             (Ok(mut $df), Ok($df1)) => $body,
-            _ => Err(ExPolarsError::Internal),
+            _ => Err(ExPolarsError::Internal(
+                "Failed to take write and read lock for df and df1".into(),
+            )),
         }
     };
 }

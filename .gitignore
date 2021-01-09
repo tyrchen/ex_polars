@@ -28,3 +28,4 @@ ex_polars-*.tar
 
 *.so
 .vscode
+.ipynb_checkpoints

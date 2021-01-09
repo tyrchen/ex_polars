@@ -59,14 +59,14 @@ theme: uncover
 // take read lock and process
 match data.inner.0.read() {
   Ok(df) => deal_with_df,
-  Err(_) => Err(ExPolarsError.Internal)
+  Err(_) => Err(ExPolarsError.Internal(...))
 }
 
 // I want to DRY, but this won't work.
 def get_reader(*self) -> DataFrame {
   match data.inner.0.read() {
     Ok(df) => (&*df).as_ref(),
-    Err(_) => Err(ExPolarsError.Internal)
+    Err(_) => Err(ExPolarsError.Internal(...))
   }
 }
 
@@ -87,7 +87,7 @@ macro_rules! df_read {
     ($data: ident, $df: ident, $body: block) => {
         match $data.inner.0.read() {
             Ok($df) => $body,
-            Err(_) => Err(ExPolarsError::Internal),
+            Err(_) => Err(ExPolarsError::Internal(...)),
         }
     };
 }

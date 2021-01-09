@@ -15,8 +15,8 @@ pub enum ExPolarsError {
     Json(#[from] serde_json::Error),
     #[error("Polars Error")]
     Polars(#[from] polars::prelude::PolarsError),
-    #[error("Internal Error")]
-    Internal,
+    #[error("Internal Error: {0}")]
+    Internal(String),
     #[error("Other error: {0}")]
     Other(String),
     #[error(transparent)]
@@ -25,13 +25,6 @@ pub enum ExPolarsError {
 
 impl<'a> Encoder for ExPolarsError {
     fn encode<'b>(&self, env: Env<'b>) -> Term<'b> {
-        match self {
-            ExPolarsError::Internal => (error(), self.to_string()).encode(env),
-            ExPolarsError::Io(_) => (error(), self.to_string()).encode(env),
-            ExPolarsError::Json(_) => (error(), self.to_string()).encode(env),
-            ExPolarsError::Polars(_) => (error(), self.to_string()).encode(env),
-            ExPolarsError::Other(_) => (error(), self.to_string()).encode(env),
-            ExPolarsError::Unknown(_) => (error(), self.to_string()).encode(env),
-        }
+        format!("{:?}", self).encode(env)
     }
 }
