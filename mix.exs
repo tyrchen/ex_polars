@@ -1,7 +1,7 @@
 defmodule ExPolars.MixProject do
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.1.0-dev"
   def project do
     [
       app: :ex_polars,
@@ -45,7 +45,11 @@ defmodule ExPolars.MixProject do
   defp deps do
     [
       {:rustler, "~> 0.22.0-rc.0"},
-      {:jason, "~> 1.2"}
+      {:jason, "~> 1.2"},
+
+      # dev/test deps
+      {:ex_doc, "~> 0.23", only: :dev, runtime: false},
+      {:credo, "~> 1.5", only: [:dev]}
     ]
   end
 
