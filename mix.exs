@@ -1,6 +1,7 @@
 defmodule ExPolars.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
   def project do
     [
       app: :ex_polars,
@@ -11,10 +12,22 @@ defmodule ExPolars.MixProject do
           mode: rustc_mode(Mix.env())
         ]
       ],
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+
+      # Docs
+      name: "ExPolars",
+      docs: [
+        extras: ["README.md"]
+      ],
+      source_url: "https://github.com/tyrchen/ex_polars",
+      homepage_url: "https://github.com/tyrchen/ex_polars",
+      description: """
+      Elixir support for [polars](https://github.com/ritchie46/polars), a DataFrame library written in rust.
+      """,
+      package: package()
     ]
   end
 
@@ -33,6 +46,18 @@ defmodule ExPolars.MixProject do
     [
       {:rustler, "~> 0.22.0-rc.0"},
       {:jason, "~> 1.2"}
+    ]
+  end
+
+  defp package do
+    [
+      files: ["lib", "native", "mix.exs", "README*", "LICENSE*"],
+      licenses: ["MIT"],
+      maintainers: ["tyr.chen@gmail.com"],
+      links: %{
+        "GitHub" => "https://github.com/tyrchen/ex_polars",
+        "Docs" => "https://hexdocs.pm/ex_polars"
+      }
     ]
   end
 end
