@@ -312,10 +312,12 @@ name = "expolars"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "arrow",
  "ndarray",
  "parquet",
  "polars",
  "rustler",
+ "serde_json",
  "thiserror",
 ]
 

@@ -90,7 +90,27 @@ defmodule ExPolars.Native do
   def df_median(_df), do: err()
   def df_quantile(_df, _quant), do: err()
   def df_to_dummies(_df), do: err()
+
+  # Series
   def s_as_str(_s), do: err()
+  def s_new_i8(_name, _val), do: err()
+  def s_new_i16(_name, _val), do: err()
+  def s_new_i32(_name, _val), do: err()
+  def s_new_i64(_name, _val), do: err()
+  def s_new_bool(_name, _val), do: err()
+  def s_new_u8(_name, _val), do: err()
+  def s_new_u16(_name, _val), do: err()
+  def s_new_u32(_name, _val), do: err()
+  def s_new_u64(_name, _val), do: err()
+  def s_new_date32(_name, _val), do: err()
+  def s_new_date64(_name, _val), do: err()
+  def s_new_duration_ns(_name, _val), do: err()
+  def s_new_f32(_name, _val), do: err()
+  def s_new_f64(_name, _val), do: err()
+  def s_parse_date32_from_str_slice(_name, _val, _fmt), do: err()
+  def s_new_str(_name, _val), do: err()
+
+  def s_to_json(_s), do: err()
 
   defp err, do: :erlang.nif_error(:nif_not_loaded)
 end

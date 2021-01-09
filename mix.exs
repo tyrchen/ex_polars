@@ -31,7 +31,8 @@ defmodule ExPolars.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:rustler, "~> 0.22.0-rc.0"}
+      {:rustler, "~> 0.22.0-rc.0"},
+      {:jason, "~> 1.2"}
     ]
   end
 end

@@ -16,4 +16,6 @@ polars = {git = "https://github.com/ritchie46/polars", features = ["parquet", "s
 anyhow = "1.0"
 ndarray = "0.14"
 parquet = "2"
+serde_json = "1.0"
 thiserror = "1"
+arrow = "2"

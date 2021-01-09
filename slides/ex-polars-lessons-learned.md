@@ -125,6 +125,50 @@ macro_rules! df_read {
   - write `Elixir.ExPolars.DataFrame` and `Elixir.ExPolars.Series` to proxy to the native functions
 
 ---
+## Brick wall #4: Convert data types
+
+- Problem: I need to pass the data as a list back to elixir
+  - that involves Arrow type to elixir type conversion
+  - Not able to find an elegant way during the hackathon, so decided to use JSON
+  - However Arrow types didn't implement Serialize/Deserialize
+- Solution:
+  - Convert Arrow type to primitive type
+  - serde_json::to_string()
+
+---
+
+## Brick wall #5: macro_rules! and procedure_macro problem
+
+```rust
+macro_rules! impl_cmp {
+    ($name:ident, $type:ty, $operand:ident) => {
+        #[rustler::nif] // <- this line will have issue
+        pub fn $name(data: ExSeries, rhs: $type) -> Result<ExSeries, ExPolarsError> {
+            let s = &data.inner.0;
+            Ok(ExSeries::new(s.$operand(rhs).into_series()))
+        }
+    };
+}
+
+impl_cmp!(s_eq_u8, u8, eq);
+```
+
+## Solution
+
+```rust
+macro_rules! impl_cmp_u8 {
+    ($name:ident, $operand:ident) => {
+        #[rustler::nif]
+        pub fn $name(data: ExSeries, rhs: u8) -> Result<ExSeries, ExPolarsError> {
+            let s = &data.inner.0;
+            Ok(ExSeries::new(s.$operand(rhs).into_series()))
+        }
+    };
+}
+impl_cmp_u8!(s_eq_u8, eq);
+```
+
+---
 <!-- _backgroundColor: darkgrey -->
 <!-- _color: white -->
 
