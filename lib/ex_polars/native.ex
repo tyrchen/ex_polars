@@ -164,7 +164,7 @@ defmodule ExPolars.Native do
   def s_str_to_lowercase(_s), do: err()
   def s_str_parse_date32(_s, _fmt), do: err()
   def s_str_parse_date64(_s, _fmt), do: err()
-  def s_datetime_str_fmt(_s, _ft), do: err()
+  def s_datetime_str_fmt(_s, _fmt), do: err()
   def s_as_duration(_s), do: err()
   def s_to_dummies(_s), do: err()
   def s_get_list(_s, _index), do: err()
