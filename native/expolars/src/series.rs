@@ -425,13 +425,13 @@ pub fn s_to_json(data: ExSeries) -> Result<String, ExPolarsError> {
 }
 
 #[rustler::nif]
-pub fn drop_nulls(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_drop_nulls(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     Ok(ExSeries::new(s.drop_nulls()))
 }
 
 #[rustler::nif]
-pub fn fill_none(data: ExSeries, strategy: &str) -> Result<ExSeries, ExPolarsError> {
+pub fn s_fill_none(data: ExSeries, strategy: &str) -> Result<ExSeries, ExPolarsError> {
     let strat = match strategy {
         "backward" => FillNoneStrategy::Backward,
         "forward" => FillNoneStrategy::Forward,
@@ -447,20 +447,20 @@ pub fn fill_none(data: ExSeries, strategy: &str) -> Result<ExSeries, ExPolarsErr
 }
 
 #[rustler::nif]
-pub fn clone(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_clone(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     Ok(ExSeries::new(s.clone()))
 }
 
 #[rustler::nif]
-pub fn shift(data: ExSeries, periods: i32) -> Result<ExSeries, ExPolarsError> {
+pub fn s_shift(data: ExSeries, periods: i32) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let s1 = s.shift(periods)?;
     Ok(ExSeries::new(s1))
 }
 
 #[rustler::nif]
-pub fn zip_with(
+pub fn s_zip_with(
     data: ExSeries,
     mask: ExSeries,
     other: ExSeries,
@@ -474,7 +474,7 @@ pub fn zip_with(
 }
 
 #[rustler::nif]
-pub fn str_lengths(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_str_lengths(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let ca = s.utf8()?;
     let s1 = ca.str_lengths().into_series();
@@ -482,7 +482,7 @@ pub fn str_lengths(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
 }
 
 #[rustler::nif]
-pub fn str_contains(data: ExSeries, pat: &str) -> Result<ExSeries, ExPolarsError> {
+pub fn s_str_contains(data: ExSeries, pat: &str) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let ca = s.utf8()?;
     let s1 = ca.contains(pat)?.into_series();
@@ -490,7 +490,7 @@ pub fn str_contains(data: ExSeries, pat: &str) -> Result<ExSeries, ExPolarsError
 }
 
 #[rustler::nif]
-pub fn str_replace(data: ExSeries, pat: &str, val: &str) -> Result<ExSeries, ExPolarsError> {
+pub fn s_str_replace(data: ExSeries, pat: &str, val: &str) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let ca = s.utf8()?;
     let s1 = ca.replace(pat, val)?.into_series();
@@ -498,7 +498,7 @@ pub fn str_replace(data: ExSeries, pat: &str, val: &str) -> Result<ExSeries, ExP
 }
 
 #[rustler::nif]
-pub fn str_replace_all(data: ExSeries, pat: &str, val: &str) -> Result<ExSeries, ExPolarsError> {
+pub fn s_str_replace_all(data: ExSeries, pat: &str, val: &str) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let ca = s.utf8()?;
     let s1 = ca.replace_all(pat, val)?.into_series();
@@ -506,7 +506,7 @@ pub fn str_replace_all(data: ExSeries, pat: &str, val: &str) -> Result<ExSeries,
 }
 
 #[rustler::nif]
-pub fn str_to_uppercase(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_str_to_uppercase(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let ca = s.utf8()?;
     let s1 = ca.to_uppercase().into_series();
@@ -514,7 +514,7 @@ pub fn str_to_uppercase(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
 }
 
 #[rustler::nif]
-pub fn str_to_lowercase(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_str_to_lowercase(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let ca = s.utf8()?;
     let s1 = ca.to_lowercase().into_series();
@@ -522,7 +522,7 @@ pub fn str_to_lowercase(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
 }
 
 #[rustler::nif]
-pub fn str_parse_date32(data: ExSeries, fmt: Option<&str>) -> Result<ExSeries, ExPolarsError> {
+pub fn s_str_parse_date32(data: ExSeries, fmt: Option<&str>) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     if let Ok(ca) = s.utf8() {
         let ca = ca.as_date32(fmt)?;
@@ -533,7 +533,7 @@ pub fn str_parse_date32(data: ExSeries, fmt: Option<&str>) -> Result<ExSeries, E
 }
 
 #[rustler::nif]
-pub fn str_parse_date64(data: ExSeries, fmt: Option<&str>) -> Result<ExSeries, ExPolarsError> {
+pub fn s_str_parse_date64(data: ExSeries, fmt: Option<&str>) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     if let Ok(ca) = s.utf8() {
         let ca = ca.as_date64(fmt)?;
@@ -544,14 +544,14 @@ pub fn str_parse_date64(data: ExSeries, fmt: Option<&str>) -> Result<ExSeries, E
 }
 
 #[rustler::nif]
-pub fn datetime_str_fmt(data: ExSeries, fmt: &str) -> Result<ExSeries, ExPolarsError> {
+pub fn s_datetime_str_fmt(data: ExSeries, fmt: &str) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let s1 = s.datetime_str_fmt(fmt)?;
     Ok(ExSeries::new(s1))
 }
 
 #[rustler::nif]
-pub fn as_duration(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_as_duration(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     match s.dtype() {
         ArrowDataType::Date64(_) => {
@@ -570,14 +570,14 @@ pub fn as_duration(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
 }
 
 #[rustler::nif]
-pub fn to_dummies(data: ExSeries) -> Result<ExDataFrame, ExPolarsError> {
+pub fn s_to_dummies(data: ExSeries) -> Result<ExDataFrame, ExPolarsError> {
     let s = &data.inner.0;
     let df = s.to_dummies()?;
     Ok(ExDataFrame::new(df))
 }
 
 #[rustler::nif]
-pub fn get_list(data: ExSeries, index: usize) -> Option<ExSeries> {
+pub fn s_get_list(data: ExSeries, index: usize) -> Option<ExSeries> {
     let s = &data.inner.0;
     if let Ok(ca) = s.list() {
         let s = ca.get(index);
@@ -588,7 +588,7 @@ pub fn get_list(data: ExSeries, index: usize) -> Option<ExSeries> {
 }
 
 #[rustler::nif]
-pub fn rolling_sum(
+pub fn s_rolling_sum(
     data: ExSeries,
     window_size: usize,
     weight: Option<Vec<f64>>,
@@ -600,7 +600,7 @@ pub fn rolling_sum(
 }
 
 #[rustler::nif]
-pub fn rolling_mean(
+pub fn s_rolling_mean(
     data: ExSeries,
     window_size: usize,
     weight: Option<Vec<f64>>,
@@ -612,7 +612,7 @@ pub fn rolling_mean(
 }
 
 #[rustler::nif]
-pub fn rolling_max(
+pub fn s_rolling_max(
     data: ExSeries,
     window_size: usize,
     weight: Option<Vec<f64>>,
@@ -624,7 +624,7 @@ pub fn rolling_max(
 }
 
 #[rustler::nif]
-pub fn rolling_min(
+pub fn s_rolling_min(
     data: ExSeries,
     window_size: usize,
     weight: Option<Vec<f64>>,
@@ -636,56 +636,56 @@ pub fn rolling_min(
 }
 
 #[rustler::nif]
-pub fn year(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_year(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let s1 = s.year()?;
     Ok(ExSeries::new(s1))
 }
 
 #[rustler::nif]
-pub fn month(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_month(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let s1 = s.month()?;
     Ok(ExSeries::new(s1))
 }
 
 #[rustler::nif]
-pub fn day(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_day(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let s1 = s.day()?;
     Ok(ExSeries::new(s1))
 }
 
 #[rustler::nif]
-pub fn ordinal_day(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_ordinal_day(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let s1 = s.ordinal_day()?;
     Ok(ExSeries::new(s1))
 }
 
 #[rustler::nif]
-pub fn hour(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_hour(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let s1 = s.hour()?;
     Ok(ExSeries::new(s1))
 }
 
 #[rustler::nif]
-pub fn minute(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_minute(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let s1 = s.minute()?;
     Ok(ExSeries::new(s1))
 }
 
 #[rustler::nif]
-pub fn second(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_second(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let s1 = s.second()?;
     Ok(ExSeries::new(s1))
 }
 
 #[rustler::nif]
-pub fn nanosecond(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
+pub fn s_nanosecond(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     let s1 = s.nanosecond()?;
     Ok(ExSeries::new(s1))
