@@ -89,6 +89,26 @@ pub fn df_read_json(
 #[rustler::nif]
 pub fn df_to_csv(
     data: ExDataFrame,
+    batch_size: usize,
+    has_headers: bool,
+    delimiter: u8,
+) -> Result<String, ExPolarsError> {
+    df_write!(data, df, {
+        let mut buf: Vec<u8> = Vec::with_capacity(81920);
+        CsvWriter::new(&mut buf)
+            .has_headers(has_headers)
+            .with_delimiter(delimiter)
+            .with_batch_size(batch_size)
+            .finish(&mut *df)?;
+
+        let s = String::from_utf8(buf)?;
+        Ok(s)
+    })
+}
+
+#[rustler::nif]
+pub fn df_to_csv_file(
+    data: ExDataFrame,
     filename: &str,
     batch_size: usize,
     has_headers: bool,

@@ -43,9 +43,20 @@ defmodule ExPolars.DataFrame do
   @spec read_json(String.t(), boolean()) :: {:ok, t()} | {:error, term()}
   defdelegate read_json(filename, line_delimited_json \\ false), to: Native, as: :df_read_json
 
-  @spec to_csv(t() | {:ok, t()}, String.t(), integer(), boolean(), integer()) ::
-          :ok | {:error, term()}
+  @spec to_csv(t() | {:ok, t()}, integer(), boolean(), integer()) ::
+          {:ok, String.t()} | {:error, term()}
   defdelegate to_csv(
+                df,
+                batch_size \\ 100_000,
+                has_headers \\ true,
+                delimiter \\ ?,
+              ),
+              to: Native,
+              as: :df_to_csv
+
+  @spec to_csv_file(t() | {:ok, t()}, String.t(), integer(), boolean(), integer()) ::
+          :ok | {:error, term()}
+  defdelegate to_csv_file(
                 df,
                 filename,
                 batch_size \\ 100_000,
@@ -53,7 +64,7 @@ defmodule ExPolars.DataFrame do
                 delimiter \\ ?,
               ),
               to: Native,
-              as: :df_to_csv
+              as: :df_to_csv_file
 
   # defdelegate as_str(df), to: Native, as: :df_as_str
 

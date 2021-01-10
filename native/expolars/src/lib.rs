@@ -73,6 +73,7 @@ rustler::init!(
         df_read_parquet,
         df_read_json,
         df_to_csv,
+        df_to_csv_file,
         df_as_str,
         df_add,
         df_sub,

@@ -11,8 +11,10 @@ rustler::atoms! {
 pub enum ExPolarsError {
     #[error("IO Error")]
     Io(#[from] io::Error),
-    #[error("Json serialize/deserialize Error")]
+    #[error("Json Serialize/Deserialize Error")]
     Json(#[from] serde_json::Error),
+    #[error("Utf8 Conversion Error")]
+    Utf8(#[from] std::string::FromUtf8Error),
     #[error("Polars Error")]
     Polars(#[from] polars::prelude::PolarsError),
     #[error("Internal Error: {0}")]
