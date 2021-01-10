@@ -77,7 +77,7 @@ defmodule ExPolars.Series do
   def rename({:ok, s}, name), do: rename(s, name)
   defdelegate rename(s, name), to: Native, as: :s_rename
 
-  @spec dtype(s() | {:ok, s()}) :: {:ok, s()} | {:error, term}
+  @spec dtype(s() | {:ok, s()}) :: {:ok, integer()} | {:error, term}
   def dtype({:ok, s}), do: dtype(s)
   defdelegate dtype(s), to: Native, as: :s_dtype
 
@@ -85,16 +85,11 @@ defmodule ExPolars.Series do
   def dtype_str({:ok, s}), do: dtype_str(s)
 
   def dtype_str(s) do
-    case dtype(s) do
-      {:ok, t} ->
-        case t > 18 or t < 0 do
-          true -> @dtype_strs[18]
-          false -> @dtype_strs[t]
-        end
-
-      _ ->
-        @dtype_strs[18]
-    end
+    {:ok, t} = dtype(s)
+    @dtype_strs[t]
+  rescue
+    _ ->
+      @dtype_strs[18]
   end
 
   @spec n_chunks(s() | {:ok, s()}) :: {:ok, s()} | {:error, term}

@@ -1,0 +1,19 @@
+{
+  "airports": "datasets/airports.csv",
+  "anscombe": "datasets/anscombe.json",
+  "barley": "datasets/barley.json",
+  "burtin": "datasets/burtin.json",
+  "cars": "datasets/cars.json",
+  "crimea": "datasets/crimea.json",
+  "driving": "datasets/driving.json",
+  "iowa-electricity": "datasets/iowa-electricity.csv",
+  "iris": "datasets/iris.json",
+  "la-riots": "datasets/la-riots.csv",
+  "ohlc": "datasets/ohlc.json",
+  "seattle-temps": "datasets/seattle-temps.csv",
+  "seattle-weather": "datasets/seattle-weather.csv",
+  "sf-temps": "datasets/sf-temps.csv",
+  "stocks": "datasets/stocks.csv",
+  "us-employment": "datasets/us-employment.csv",
+  "wheat": "datasets/wheat.json"
+}
