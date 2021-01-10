@@ -40,6 +40,9 @@ defmodule ExPolars.DataFrame do
   @spec read_parquet(String.t()) :: {:ok, t()} | {:error, term()}
   defdelegate read_parquet(filename), to: Native, as: :df_read_parquet
 
+  @spec read_json(String.t(), boolean()) :: {:ok, t()} | {:error, term()}
+  defdelegate read_json(filename, line_delimited_json \\ false), to: Native, as: :df_read_json
+
   @spec to_csv(t() | {:ok, t()}, String.t(), integer(), boolean(), integer()) ::
           :ok | {:error, term()}
   defdelegate to_csv(

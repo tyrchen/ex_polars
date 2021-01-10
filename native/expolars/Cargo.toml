@@ -11,7 +11,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 rustler = "0.22.0-rc.0"
-polars = {git = "https://github.com/ritchie46/polars", features = ["parquet", "simd", "lazy", "strings", "temporal", "random", "object", "ipc"]}
+polars = {git = "https://github.com/ritchie46/polars", features = ["parquet", "json", "simd", "lazy", "strings", "temporal", "random", "object", "ipc"]}
 
 anyhow = "1.0"
 ndarray = "0.14"

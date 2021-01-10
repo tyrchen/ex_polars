@@ -71,6 +71,7 @@ rustler::init!(
     [
         df_read_csv,
         df_read_parquet,
+        df_read_json,
         df_to_csv,
         df_as_str,
         df_add,
@@ -386,3 +387,23 @@ rustler::init!(
     ],
     load = on_load
 );
+
+#[cfg(test)]
+mod test {
+    use serde_json::Value;
+    use std::fs::File;
+    #[test]
+    fn read_json() {
+        let f = File::open("crimea.json").unwrap();
+        let v: Value = serde_json::from_reader(f).unwrap();
+        let items: Vec<String> = v
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|item| serde_json::to_string(&item).unwrap())
+            .collect();
+        for line in items {
+            println!("{}", line);
+        }
+    }
+}

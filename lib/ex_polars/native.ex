@@ -24,6 +24,7 @@ defmodule ExPolars.Native do
       do: err()
 
   def df_read_parquet(_filename), do: err()
+  def df_read_json(_filename, _type), do: err()
 
   def df_to_csv(_df, _filename, _batch_size \\ 100_000, _has_headers \\ true, _delimiter \\ ?,),
     do: err()
