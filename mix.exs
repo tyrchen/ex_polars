@@ -55,7 +55,7 @@ defmodule ExPolars.MixProject do
 
   defp package do
     [
-      files: ["lib", "priv", "native", "mix.exs", "README*", "LICENSE*"],
+      files: ["lib", "priv/*.json", "priv/datasets", "native", "mix.exs", "README*", "LICENSE*"],
       licenses: ["MIT"],
       maintainers: ["tyr.chen@gmail.com"],
       links: %{
