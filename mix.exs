@@ -1,7 +1,7 @@
 defmodule ExPolars.MixProject do
   use Mix.Project
 
-  @version "0.2.0-dev"
+  @version "0.2.1-dev"
   def project do
     [
       app: :ex_polars,
@@ -55,7 +55,7 @@ defmodule ExPolars.MixProject do
 
   defp package do
     [
-      files: ["lib", "native", "mix.exs", "README*", "LICENSE*"],
+      files: ["lib", "priv", "native", "mix.exs", "README*", "LICENSE*"],
       licenses: ["MIT"],
       maintainers: ["tyr.chen@gmail.com"],
       links: %{
