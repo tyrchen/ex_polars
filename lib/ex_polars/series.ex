@@ -32,6 +32,28 @@ defmodule ExPolars.Series do
     18 => "object"
   }
 
+  @dtype_vega %{
+    0 => "quantitative",
+    1 => "quantitative",
+    2 => "quantitative",
+    3 => "quantitative",
+    4 => "quantitative",
+    5 => "quantitative",
+    6 => "quantitative",
+    7 => "quantitative",
+    8 => "quantitative",
+    9 => "quantitative",
+    10 => "quantitative",
+    11 => "nominal",
+    12 => "ordinal",
+    13 => "temporal",
+    14 => "temporal",
+    15 => "temporal",
+    16 => "temporal",
+    17 => "temporal",
+    18 => "nominal"
+  }
+
   @spec new(String.t(), list(String.t() | integer() | float() | boolean())) ::
           {:ok, s()} | {:error, term}
   def new(name, data) do
@@ -90,6 +112,17 @@ defmodule ExPolars.Series do
   rescue
     _ ->
       @dtype_strs[18]
+  end
+
+  @spec dtype_vega(s() | {:ok, s()}) :: String.t()
+  def dtype_vega({:ok, s}), do: dtype_vega(s)
+
+  def dtype_vega(s) do
+    {:ok, t} = dtype(s)
+    @dtype_vega[t]
+  rescue
+    _ ->
+      @dtype_vega[18]
   end
 
   @spec n_chunks(s() | {:ok, s()}) :: {:ok, s()} | {:error, term}

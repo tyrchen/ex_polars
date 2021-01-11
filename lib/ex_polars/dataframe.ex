@@ -1,5 +1,7 @@
 defmodule ExPolars.DataFrame do
   alias ExPolars.Native
+  alias ExPolars.Series, as: S
+  alias ExPolars.Plot
 
   @type t :: ExPolars.DataFrame
   @type s :: ExPolars.Series
@@ -450,6 +452,21 @@ defmodule ExPolars.DataFrame do
       _ -> Native.df_sort_new(df, by_column, reverse)
     end
   end
+
+  # custom functionalities
+  @spec dtype(t() | {:ok, t()}, String.t()) :: String.t() | {:error, term()}
+  def dtype(df, name, type \\ :str) do
+    s = column(df, name)
+
+    case type do
+      :vega -> S.dtype_vega(s)
+      _ -> S.dtype_str(s)
+    end
+  end
+
+  defdelegate plot_by_type(df, type, opts), to: Plot, as: :plot_by_type
+  defdelegate plot_single(df, mark, x, y, opts \\ []), to: Plot, as: :plot_single
+  defdelegate plot_repeat(df, rows, colums, opts \\ []), to: Plot, as: :plot_repeat
 end
 
 defimpl Inspect, for: ExPolars.DataFrame do
