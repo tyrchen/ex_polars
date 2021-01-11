@@ -13,8 +13,8 @@ defmodule ExPolars.Plot do
 
   def plot_single(df, mark, x, y, opts \\ []) do
     default = [width: 800, height: 600]
-    color = get_color(df, opts)
-    opts = Keyword.merge(default, Keyword.delete(opts, :color))
+    {color, opts} = get_color(df, opts)
+    opts = Keyword.merge(default, opts)
     xtype = DF.dtype(df, x, :vega)
     ytype = DF.dtype(df, y, :vega)
 
@@ -73,7 +73,7 @@ defmodule ExPolars.Plot do
     |> Chart.new(
       Encoding.new(%{
         x: %{field: x, type: DF.dtype(df, x, :vega)},
-        y: %{field: %{repeat: "repeat"}, type: "ytype"},
+        y: %{field: %{repeat: "repeat"}, type: ytype},
         color: color
       })
     )
