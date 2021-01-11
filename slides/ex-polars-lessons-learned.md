@@ -40,6 +40,41 @@ theme: uncover
 - basic understanding of rust
 - basic understanding how erlang NIF works
 - rustler: bridge elixir/rust
+- basic understanding how vega-lite works
+
+---
+
+#### First Output
+## ex_polars (pandas alternative)
+
+---
+
+![bg](images/ex_polars.jpg)
+
+---
+
+#### Second output
+## Deneb (altair alternative)
+
+---
+
+![bg](images/deneb.png)
+
+---
+
+![bg](images/deneb1.jpg)
+
+---
+
+![bg](images/deneb2.jpg)
+
+---
+
+#### Third output
+
+## PR to IElixir
+
+https://github.com/pprzetacznik/IElixir/pull/57
 
 ---
 
@@ -153,6 +188,8 @@ macro_rules! impl_cmp {
 impl_cmp!(s_eq_u8, u8, eq);
 ```
 
+---
+
 ## Solution
 
 ```rust
@@ -167,6 +204,17 @@ macro_rules! impl_cmp_u8 {
 }
 impl_cmp_u8!(s_eq_u8, eq);
 ```
+
+---
+
+## Brick wall 6: IElixir charting
+
+- Reason:
+  - I built deneb with simple vega-lite support
+  - I wrote jupyter note book to show the chart
+  - However charts cannot be shown properly
+- Solution:
+  - Fix IElixir: https://github.com/pprzetacznik/IElixir/pull/57
 
 ---
 <!-- _backgroundColor: darkgrey -->
