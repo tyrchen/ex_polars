@@ -15,5 +15,7 @@
   "sf-temps": "datasets/sf-temps.csv",
   "stocks": "datasets/stocks.csv",
   "us-employment": "datasets/us-employment.csv",
-  "wheat": "datasets/wheat.json"
+  "wheat": "datasets/wheat.json",
+  "movies": "datasets/movies.json",
+  "btc": "datasets/btc.csv"
 }
