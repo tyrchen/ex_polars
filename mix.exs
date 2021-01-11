@@ -1,7 +1,7 @@
 defmodule ExPolars.MixProject do
   use Mix.Project
 
-  @version "0.3.0-dev"
+  @version "0.3.1-dev"
   def project do
     [
       app: :ex_polars,
