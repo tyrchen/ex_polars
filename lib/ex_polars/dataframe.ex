@@ -504,7 +504,7 @@ defmodule ExPolars.DataFrame do
   # plotting
   defdelegate plot_by_type(df, type, opts), to: Plot, as: :plot_by_type
   defdelegate plot_single(df, mark, x, y, opts \\ []), to: Plot, as: :plot_single
-  defdelegate plot_repeat(df, rows, colums, opts \\ []), to: Plot, as: :plot_repeat
+  defdelegate plot_repeat(df, mark, rows, colums, opts \\ []), to: Plot, as: :plot_repeat
 end
 
 defimpl Inspect, for: ExPolars.DataFrame do
