@@ -463,6 +463,45 @@ defmodule ExPolars.DataFrame do
     end
   end
 
+  @doc """
+  """
+  @spec set(
+          t() | {:ok, t()},
+          String.t() | integer() | {String.t() | integer(), String.t()},
+          s() | {:ok, s()}
+        ) :: {:ok, t()} | {:error, term()}
+  def set({:ok, df}, key, {:ok, value}), do: set(df, key, value)
+  def set(df, key, {:ok, value}), do: set(df, key, value)
+  def set({:ok, df}, key, value), do: set(df, key, value)
+  # df["foo"] = value
+  def set(df, key, value) when is_binary(key) do
+    case drop_in_place(df, key) do
+      {:ok, _s} -> hstack_mut(df, [value])
+      _ -> hstack_mut(df, [value])
+    end
+  end
+
+  # df[idx] = value
+  def set(df, key, value) when is_integer(key) do
+    replace_at_idx(df, key, value)
+  end
+
+  # df[a, b] = value
+  def set(_df, {_row, _col}, _value) do
+    raise "Not implemented"
+  end
+
+  @spec set(t() | {:ok, t()}, String.t(), String.t()) :: {:ok, {}} | {:error, term()}
+  def parse_date(df, name, format \\ "%Y/%m/%d") do
+    with {:ok, s} <- drop_in_place(df, name),
+         {:ok, s} <- S.str_parse_date32(s, format) do
+      hstack_mut(df, [s])
+    else
+      e -> e
+    end
+  end
+
+  # plotting
   defdelegate plot_by_type(df, type, opts), to: Plot, as: :plot_by_type
   defdelegate plot_single(df, mark, x, y, opts \\ []), to: Plot, as: :plot_single
   defdelegate plot_repeat(df, rows, colums, opts \\ []), to: Plot, as: :plot_repeat

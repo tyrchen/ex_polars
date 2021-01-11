@@ -3,19 +3,63 @@
   "anscombe": "datasets/anscombe.json",
   "barley": "datasets/barley.json",
   "burtin": "datasets/burtin.json",
-  "cars": "datasets/cars.json",
-  "crimea": "datasets/crimea.json",
+  "cars": {
+    "file": "datasets/cars.json",
+    "date": "Year",
+    "format": "%Y-%m-%d"
+  },
+  "crimea": {
+    "file": "datasets/crimea.json",
+    "date": "date",
+    "format": "%Y-%m-%d"
+  },
   "driving": "datasets/driving.json",
-  "iowa-electricity": "datasets/iowa-electricity.csv",
+  "iowa-electricity": {
+    "file": "datasets/iowa-electricity.csv",
+    "date": "year",
+    "format": "%Y-%m-%d"
+  },
   "iris": "datasets/iris.json",
-  "la-riots": "datasets/la-riots.csv",
-  "ohlc": "datasets/ohlc.json",
-  "seattle-temps": "datasets/seattle-temps.csv",
-  "seattle-weather": "datasets/seattle-weather.csv",
-  "sf-temps": "datasets/sf-temps.csv",
-  "stocks": "datasets/stocks.csv",
-  "us-employment": "datasets/us-employment.csv",
+  "la-riots": {
+    "file": "datasets/la-riots.csv",
+    "date": "death_date",
+    "format": "%Y-%m-%d"
+  },
+  "ohlc": {
+    "file": "datasets/ohlc.json",
+    "date": "date",
+    "format": "%Y-%m-%d"
+  },
+  "seattle-temps": {
+    "file": "datasets/seattle-temps.csv",
+    "date": "date",
+    "format": "%Y/%m/%d %H:%M"
+  },
+  "seattle-weather": {
+    "file": "datasets/seattle-weather.csv",
+    "date": "date",
+    "format": "%Y/%m/%d"
+  },
+  "sf-temps": {
+    "file": "datasets/sf-temps.csv",
+    "date": "Date",
+    "format": "%Y/%m/%d %H:%M:%S"
+  },
+  "stocks": {
+    "file": "datasets/stocks.csv",
+    "date": "date",
+    "format": "%b %e %Y"
+  },
+  "us-employment": {
+    "file": "datasets/us-employment.csv",
+    "date": "month",
+    "format": "%Y-%m-%d"
+  },
   "wheat": "datasets/wheat.json",
   "movies": "datasets/movies.json",
-  "btc": "datasets/btc.csv"
+  "btc": {
+    "file": "datasets/btc.csv",
+    "date": "Date",
+    "format": "%Y-%m-%d"
+  }
 }
