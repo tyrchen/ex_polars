@@ -47,26 +47,23 @@ defmodule ExPolars.DataFrame do
 
   @spec to_csv(t() | {:ok, t()}, integer(), boolean(), integer()) ::
           {:ok, String.t()} | {:error, term()}
-  defdelegate to_csv(
-                df,
-                batch_size \\ 100_000,
-                has_headers \\ true,
-                delimiter \\ ?,
-              ),
-              to: Native,
-              as: :df_to_csv
+  def to_csv(df, batch_size \\ 100_000, has_headers \\ true, delimiter \\ ?,)
+
+  def to_csv({:ok, df}, batch_size, has_headers, delimiter),
+    do: to_csv(df, batch_size, has_headers, delimiter)
+
+  defdelegate to_csv(df, batch_size, has_headers, delimiter), to: Native, as: :df_to_csv
 
   @spec to_csv_file(t() | {:ok, t()}, String.t(), integer(), boolean(), integer()) ::
-          :ok | {:error, term()}
-  defdelegate to_csv_file(
-                df,
-                filename,
-                batch_size \\ 100_000,
-                has_headers \\ true,
-                delimiter \\ ?,
-              ),
-              to: Native,
-              as: :df_to_csv_file
+          {:ok, {}} | {:error, term()}
+  def to_csv_file(df, filename, batch_size \\ 100_000, has_headers \\ true, delimiter \\ ?,)
+
+  def to_csv_file({:ok, df}, filename, batch_size, has_headers, delimiter),
+    do: to_csv_file(df, filename, batch_size, has_headers, delimiter)
+
+  defdelegate to_csv_file(df, filename, batch_size, has_headers, delimiter),
+    to: Native,
+    as: :df_to_csv_file
 
   # defdelegate as_str(df), to: Native, as: :df_as_str
 
@@ -100,7 +97,7 @@ defmodule ExPolars.DataFrame do
   def remainder({:ok, df}, s), do: remainder(df, s)
   defdelegate remainder(df, s), to: Native, as: :df_rem
 
-  @spec rechunk(t() | {:ok, t()}) :: :ok | {:error, term()}
+  @spec rechunk(t() | {:ok, t()}) :: {:ok, {}} | {:error, term()}
   def rechunk({:ok, df}), do: rechunk(df)
   defdelegate rechunk(df), to: Native, as: :df_rechunk
 
@@ -121,7 +118,7 @@ defmodule ExPolars.DataFrame do
   def columns({:ok, df}), do: columns(df)
   defdelegate columns(def), to: Native, as: :df_columns
 
-  @spec set_column_names(t() | {:ok, t()}, list(String.t())) :: :ok | {:error, term()}
+  @spec set_column_names(t() | {:ok, t()}, list(String.t())) :: {:ok, {}} | {:error, term()}
   def set_column_names({:ok, df}, names), do: set_column_names(df, names)
   defdelegate set_column_names(df, names), to: Native, as: :df_set_column_names
 
@@ -144,7 +141,7 @@ defmodule ExPolars.DataFrame do
   def width({:ok, df}), do: width(df)
   defdelegate width(df), to: Native, as: :df_width
 
-  @spec hstack_mut(t() | {:ok, t()}, list(s() | {:ok, s()})) :: :ok | {:error, term()}
+  @spec hstack_mut(t() | {:ok, t()}, list(s() | {:ok, s()})) :: {:ok, {}} | {:error, term()}
   def hstack_mut({:ok, df}, cols), do: hstack_mut(df, cols)
   defdelegate hstack_mut(df, cols), to: Native, as: :df_hstack_mut
 
@@ -152,7 +149,7 @@ defmodule ExPolars.DataFrame do
   def hstack({:ok, df}, cols), do: hstack(df, cols)
   defdelegate hstack(df, cols), to: Native, as: :df_hstack
 
-  @spec vstack(t() | {:ok, t()}, t() | {:ok, t()}) :: :ok | {:error, term()}
+  @spec vstack(t() | {:ok, t()}, t() | {:ok, t()}) :: {:ok, {}} | {:error, term()}
   def vstack({:ok, df}, other), do: vstack(df, other)
   defdelegate vstack(df, other), to: Native, as: :df_vstack
 
@@ -201,19 +198,21 @@ defmodule ExPolars.DataFrame do
   def take_with_series({:ok, df}, indices), do: take_with_series(df, indices)
   defdelegate take_with_series(df, indices), to: Native, as: :df_take_with_series
 
-  @spec replace(t() | {:ok, t()}, String.t(), s() | {:ok, s()}) :: :ok | {:error, term()}
+  @spec replace(t() | {:ok, t()}, String.t(), s() | {:ok, s()}) :: {:ok, {}} | {:error, term()}
   def replace({:ok, df}, col, {:ok, new_col}), do: replace(df, col, new_col)
   def replace(df, col, {:ok, new_col}), do: replace(df, col, new_col)
   def replace({:ok, df}, col, new_col), do: replace(df, col, new_col)
   defdelegate replace(df, col, new_col), to: Native, as: :df_replace
 
-  @spec replace_at_idx(t() | {:ok, t()}, integer(), s() | {:ok, s()}) :: :ok | {:error, term()}
+  @spec replace_at_idx(t() | {:ok, t()}, integer(), s() | {:ok, s()}) ::
+          {:ok, {}} | {:error, term()}
   def replace_at_idx({:ok, df}, index, {:ok, new_col}), do: replace_at_idx(df, index, new_col)
   def replace_at_idx(df, index, {:ok, new_col}), do: replace_at_idx(df, index, new_col)
   def replace_at_idx({:ok, df}, index, new_col), do: replace_at_idx(df, index, new_col)
   defdelegate replace_at_idx(df, index, new_col), to: Native, as: :df_replace_at_idx
 
-  @spec insert_at_idx(t() | {:ok, t()}, integer(), s() | {:ok, s()}) :: :ok | {:error, term()}
+  @spec insert_at_idx(t() | {:ok, t()}, integer(), s() | {:ok, s()}) ::
+          {:ok, {}} | {:error, term()}
   def insert_at_idx({:ok, df}, index, {:ok, new_col}), do: insert_at_idx(df, index, new_col)
   def insert_at_idx(df, index, {:ok, new_col}), do: insert_at_idx(df, index, new_col)
   def insert_at_idx({:ok, df}, index, new_col), do: insert_at_idx(df, index, new_col)
