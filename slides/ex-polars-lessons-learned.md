@@ -1,6 +1,6 @@
 ---
 marp: true
-title: 'ExPolars Lessons Learned'
+title: 'ExPolars/Deneb Lessons Learned'
 paginate: false
 _paginate: false
 theme: uncover
@@ -20,7 +20,7 @@ theme: uncover
 ##
 ##
 
-### ExPolars Lessons Learned
+### ExPolars/Deneb Lessons Learned
 
 ---
 
@@ -32,6 +32,7 @@ theme: uncover
 
 - use [polars](https://github.com/ritchie46/polars) for data manipulation
 - use [vega-lite](https://vega.github.io/vega-lite/) for data visualization
+- use jupyter and IElixir for notebook
 
 ---
 
