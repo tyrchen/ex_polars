@@ -2,7 +2,6 @@
 
 use polars::prelude::*;
 
-use polars::frame::ser::csv::CsvEncoding;
 use std::fs::File;
 use std::io::Cursor;
 use std::result::Result;
@@ -272,7 +271,8 @@ pub fn df_dtypes(data: ExDataFrame) -> Result<Vec<u8>, ExPolarsError> {
         let result = df
             .dtypes()
             .iter()
-            .map(|arrow_dtype| {
+            .map(|dtype| {
+                let arrow_dtype = &dtype.to_arrow();
                 let dt: DataType = arrow_dtype.into();
                 dt as u8
             })
