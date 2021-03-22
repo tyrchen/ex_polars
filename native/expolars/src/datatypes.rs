@@ -98,7 +98,7 @@ impl From<&ArrowDataType> for DataType {
             ArrowDataType::Duration(TimeUnit::Nanosecond) => DurationNanosecond,
             ArrowDataType::Duration(TimeUnit::Millisecond) => DurationMillisecond,
             ArrowDataType::Binary => Object,
-            dt => panic!(format!("datatype: {:?} not supported", dt)),
+            dt => panic!("datatype: {:?} not supported", dt),
         }
     }
 }

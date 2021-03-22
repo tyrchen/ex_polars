@@ -1,7 +1,7 @@
 use polars::prelude::*;
 use std::result::Result;
 
-use crate::{DataType, ExDataFrame, ExPolarsError, ExSeries};
+use crate::{DataType as ExDataType, ExDataFrame, ExPolarsError, ExSeries};
 
 pub(crate) fn to_series_collection(s: Vec<ExSeries>) -> Vec<Series> {
     s.into_iter().map(|c| c.inner.0.clone()).collect()
@@ -58,7 +58,7 @@ pub fn s_new_str(name: &str, val: Vec<&str>) -> ExSeries {
 #[rustler::nif]
 pub fn s_rechunk(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
-    let series = s.rechunk(None).expect("should not fail");
+    let series = s.rechunk().expect("should not fail");
     Ok(ExSeries::new(series))
 }
 
@@ -82,7 +82,8 @@ pub fn s_rename(data: ExSeries, name: &str) -> Result<ExSeries, ExPolarsError> {
 #[rustler::nif]
 pub fn s_dtype(data: ExSeries) -> Result<u8, ExPolarsError> {
     let s = &data.inner.0;
-    let dt: DataType = s.dtype().into();
+    let arrow_type = &s.dtype().to_arrow();
+    let dt: ExDataType = arrow_type.into();
     Ok(dt as u8)
 }
 
@@ -367,7 +368,7 @@ pub fn s_to_json(data: ExSeries) -> Result<String, ExPolarsError> {
     let s = &data.inner.0;
 
     let st = match s.dtype() {
-        ArrowDataType::Boolean => {
+        DataType::Boolean => {
             let arr: Vec<bool> = s
                 .bool()
                 .unwrap()
@@ -376,7 +377,7 @@ pub fn s_to_json(data: ExSeries) -> Result<String, ExPolarsError> {
                 .collect();
             serde_json::to_string(&arr)
         }
-        ArrowDataType::Utf8 => {
+        DataType::Utf8 => {
             let arr: Vec<String> = s
                 .utf8()
                 .unwrap()
@@ -385,32 +386,32 @@ pub fn s_to_json(data: ExSeries) -> Result<String, ExPolarsError> {
                 .collect();
             serde_json::to_string(&arr)
         }
-        ArrowDataType::UInt8 => serde_json::to_string(&s.u8().unwrap().data_views()),
-        ArrowDataType::UInt16 => serde_json::to_string(&s.u16().unwrap().data_views()),
-        ArrowDataType::UInt32 => serde_json::to_string(&s.u32().unwrap().data_views()),
-        ArrowDataType::UInt64 => serde_json::to_string(&s.u64().unwrap().data_views()),
-        ArrowDataType::Int8 => serde_json::to_string(&s.i8().unwrap().data_views()),
-        ArrowDataType::Int16 => serde_json::to_string(&s.i16().unwrap().data_views()),
-        ArrowDataType::Int32 => serde_json::to_string(&s.i32().unwrap().data_views()),
-        ArrowDataType::Int64 => serde_json::to_string(&s.i64().unwrap().data_views()),
-        ArrowDataType::Float32 => serde_json::to_string(&s.f32().unwrap().data_views()),
-        ArrowDataType::Float64 => serde_json::to_string(&s.f64().unwrap().data_views()),
-        ArrowDataType::Date32(DateUnit::Day) => {
+        DataType::UInt8 => serde_json::to_string(&s.u8().unwrap().data_views()),
+        DataType::UInt16 => serde_json::to_string(&s.u16().unwrap().data_views()),
+        DataType::UInt32 => serde_json::to_string(&s.u32().unwrap().data_views()),
+        DataType::UInt64 => serde_json::to_string(&s.u64().unwrap().data_views()),
+        DataType::Int8 => serde_json::to_string(&s.i8().unwrap().data_views()),
+        DataType::Int16 => serde_json::to_string(&s.i16().unwrap().data_views()),
+        DataType::Int32 => serde_json::to_string(&s.i32().unwrap().data_views()),
+        DataType::Int64 => serde_json::to_string(&s.i64().unwrap().data_views()),
+        DataType::Float32 => serde_json::to_string(&s.f32().unwrap().data_views()),
+        DataType::Float64 => serde_json::to_string(&s.f64().unwrap().data_views()),
+        DataType::Date32 => {
             serde_json::to_string(&s.date32().unwrap().data_views())
         }
-        ArrowDataType::Date64(DateUnit::Millisecond) => {
+        DataType::Date64 => {
             serde_json::to_string(&s.date64().unwrap().data_views())
         }
-        ArrowDataType::Time64(TimeUnit::Nanosecond) => {
+        DataType::Time64(TimeUnit::Nanosecond) => {
             serde_json::to_string(&s.time64_nanosecond().unwrap().data_views())
         }
-        ArrowDataType::Duration(TimeUnit::Nanosecond) => {
+        DataType::Duration(TimeUnit::Nanosecond) => {
             serde_json::to_string(&s.duration_nanosecond().unwrap().data_views())
         }
-        ArrowDataType::Duration(TimeUnit::Millisecond) => {
+        DataType::Duration(TimeUnit::Millisecond) => {
             serde_json::to_string(&s.duration_millisecond().unwrap().data_views())
         }
-        ArrowDataType::Binary => {
+        DataType::Object => {
             let mut v = Vec::with_capacity(s.len());
             for i in 0..s.len() {
                 let val = s.get_as_any(i).downcast_ref::<Vec<u8>>().unwrap();
@@ -418,7 +419,7 @@ pub fn s_to_json(data: ExSeries) -> Result<String, ExPolarsError> {
             }
             serde_json::to_string(&v)
         }
-        dt => panic!(format!("to_list() not implemented for {:?}", dt)),
+        dt => panic!("to_list() not implemented for {:?}", dt),
     };
 
     Ok(st?)
@@ -554,11 +555,11 @@ pub fn s_datetime_str_fmt(data: ExSeries, fmt: &str) -> Result<ExSeries, ExPolar
 pub fn s_as_duration(data: ExSeries) -> Result<ExSeries, ExPolarsError> {
     let s = &data.inner.0;
     match s.dtype() {
-        ArrowDataType::Date64(_) => {
+        DataType::Date64 => {
             let ca = s.date64().unwrap().as_duration();
             Ok(ExSeries::new(ca.into_series()))
         }
-        ArrowDataType::Date32(_) => {
+        DataType::Date32 => {
             let ca = s.date32().unwrap().as_duration();
             Ok(ExSeries::new(ca.into_series()))
         }

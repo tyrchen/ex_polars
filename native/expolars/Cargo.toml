@@ -11,11 +11,11 @@ crate-type = ["cdylib"]
 
 [dependencies]
 rustler = "0.22.0-rc.0"
-polars = {git = "https://github.com/ritchie46/polars", features = ["parquet", "json", "simd", "lazy", "strings", "temporal", "random", "object", "ipc"]}
+polars = { version = "0.12.1", features = ["parquet", "json", "simd", "lazy", "strings", "temporal", "random", "object", "ipc"] }
 
+arrow = {version="4.0.0-SNAPSHOT", git = "https://github.com/apache/arrow", rev = "f7b143959ec77a79a3e11bcb83e24eaf0d03697c", default-features=false}
+parquet = {version = "4.0.0-SNAPSHOT", optional = true, git = "https://github.com/apache/arrow", rev = "f7b143959ec77a79a3e11bcb83e24eaf0d03697c"}
 anyhow = "1.0"
 ndarray = "0.14"
-parquet = "2"
 serde_json = "1.0"
 thiserror = "1"
-arrow = "2"
